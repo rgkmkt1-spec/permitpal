@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const PROJECT_TYPES = [
   { id: "deck", label: "Deck or Patio", icon: "🪵" },
@@ -51,6 +51,14 @@ export default function Home() {
   const [waitlistDone, setWaitlistDone] = useState(false);
   const [waitlistLoading, setWaitlistLoading] = useState(false);
   const [error, setError] = useState("");
+  const [hasPaid, setHasPaid] = useState(false);
+  const [showPaywall, setShowPaywall] = useState(false);
+  const [paywallLoading, setPaywallLoading] = useState(false);
+
+  useEffect(() => {
+    const paid = localStorage.getItem("permitpal_paid");
+    if (paid) setHasPaid(true);
+  }, []);
 
   const selectedType = PROJECT_TYPES.find((t) => t.id === projectType);
   const progressPct = [0, 25, 50, 75, 100][Math.min(step, 4)];
@@ -59,6 +67,12 @@ export default function Home() {
     setCheckedItems((p) => ({ ...p, [key]: !p[key] }));
 
   const handleAnalyze = async () => {
+    // Check if free report already used and not paid
+    const usedFree = localStorage.getItem("permitpal_used_free");
+    if (usedFree && !hasPaid) {
+      setShowPaywall(true);
+      return;
+    }
     setLoading(true);
     setError("");
     setStep(4);
@@ -77,6 +91,7 @@ export default function Home() {
       if (!res.ok) throw new Error("API error");
       const data = await res.json();
       clearInterval(interval);
+      localStorage.setItem("permitpal_used_free", "true");
       setResult(data);
     } catch {
       clearInterval(interval);
@@ -85,6 +100,22 @@ export default function Home() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCheckout = async () => {
+    setPaywallLoading(true);
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: "" }),
+      });
+      const data = await res.json();
+      if (data.url) window.location.href = data.url;
+    } catch {
+      alert("Something went wrong. Please try again.");
+    }
+    setPaywallLoading(false);
   };
 
   const handleWaitlist = async () => {
@@ -167,6 +198,23 @@ export default function Home() {
 
   return (
     <div style={s.app}>
+      {showPaywall && (
+        <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.6)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: "24px" }}>
+          <div style={{ background: "#fff", borderRadius: "12px", padding: "40px", maxWidth: "440px", width: "100%", textAlign: "center", boxShadow: "0 8px 40px rgba(0,0,0,0.2)" }}>
+            <div style={{ fontSize: "40px", marginBottom: "16px" }}>🏛️</div>
+            <h2 style={{ fontSize: "24px", fontWeight: "normal", fontFamily: "Georgia, serif", marginBottom: "12px" }}>Your free report has been used</h2>
+            <p style={{ fontFamily: "sans-serif", fontSize: "14px", color: "#6B6B6B", lineHeight: "1.6", marginBottom: "8px" }}>Get unlimited permit checklists, cost estimates, and inspector tips for any project.</p>
+            <p style={{ fontFamily: "sans-serif", fontSize: "28px", fontWeight: "bold", color: "#1C3A2F", marginBottom: "24px" }}>$9.99 one-time</p>
+            <button onClick={handleCheckout} disabled={paywallLoading} style={{ background: "#1C3A2F", color: "#E8D5A3", border: "none", padding: "15px 32px", fontSize: "15px", borderRadius: "8px", cursor: "pointer", fontFamily: "sans-serif", fontWeight: 600, width: "100%", marginBottom: "12px" }}>
+              {paywallLoading ? "Loading…" : "Unlock Full Access →"}
+            </button>
+            <button onClick={() => setShowPaywall(false)} style={{ background: "transparent", color: "#6B6B6B", border: "1.5px solid #D4CFC5", padding: "13px 24px", fontSize: "14px", borderRadius: "8px", cursor: "pointer", fontFamily: "sans-serif", width: "100%" }}>
+              Maybe later
+            </button>
+          </div>
+        </div>
+      )}
+
       <nav style={s.nav}>
         <div style={s.logoWrap}>
           <span style={s.logoMark}>PP</span>
