@@ -1,17 +1,14 @@
 "use client";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
-export default function Success() {
+function SuccessContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
-  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     if (sessionId) {
-      // Store payment confirmation in localStorage
       localStorage.setItem("permitpal_paid", "true");
-      setReady(true);
     }
   }, [sessionId]);
 
@@ -28,5 +25,13 @@ export default function Success() {
         </a>
       </div>
     </div>
+  );
+}
+
+export default function Success() {
+  return (
+    <Suspense fallback={<div style={{ minHeight: "100vh", background: "#F7F5F0", display: "flex", alignItems: "center", justifyContent: "center" }}><div style={{ fontFamily: "sans-serif", color: "#6B6B6B" }}>Loading…</div></div>}>
+      <SuccessContent />
+    </Suspense>
   );
 }
