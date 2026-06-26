@@ -263,8 +263,8 @@ export default function Home() {
       {step === 0 && (
         <div style={s.hero}>
           <div style={s.heroEyebrow}>Home Renovation · Permit Guidance</div>
-          <h1 style={s.heroTitle}>Stop guessing what permits <span style={s.heroAccent}>your project needs.</span></h1>
-          <p style={s.heroSub}>Answer 8 questions. Get a municipality-specific permit checklist, cost estimates, and inspector tips — in under 60 seconds.</p>
+          <h1 style={s.heroTitle}>Know your permits <span style={s.heroAccent}>and project costs</span> before you build.</h1>
+          <p style={s.heroSub}>Answer 8 questions. Get a municipality-specific permit checklist, cost estimates, inspector tips, and full material cost breakdown — in under 60 seconds.</p>
           <div style={s.heroStats}>
             <div style={{ textAlign: "center" }}><div style={s.statNum}>$5,000+</div><div style={s.statLabel}>Average fine for unpermitted work</div></div>
             <div style={{ textAlign: "center" }}><div style={s.statNum}>38%</div><div style={s.statLabel}>Homes with unpermitted additions</div></div>
