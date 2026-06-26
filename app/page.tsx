@@ -51,6 +51,12 @@ export default function Home() {
   const [waitlistDone, setWaitlistDone] = useState(false);
   const [waitlistLoading, setWaitlistLoading] = useState(false);
   const [error, setError] = useState("");
+  const [estimate, setEstimate] = useState<any>(null);
+  const [estimateLoading, setEstimateLoading] = useState(false);
+  const [estimateError, setEstimateError] = useState("");
+  const [showEstimateForm, setShowEstimateForm] = useState(false);
+  const [materialQuality, setMaterialQuality] = useState("");
+  const [locationType, setLocationType] = useState("");
   const [hasPaid, setHasPaid] = useState(false);
   const [showPaywall, setShowPaywall] = useState(false);
   const [paywallLoading, setPaywallLoading] = useState(false);
@@ -99,6 +105,37 @@ export default function Home() {
       setStep(3);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleEstimate = async () => {
+    if (!materialQuality || !locationType) {
+      setShowEstimateForm(true);
+      return;
+    }
+    setShowEstimateForm(false);
+    setEstimateLoading(true);
+    setEstimateError("");
+    try {
+      const res = await fetch("/api/estimate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          projectLabel: selectedType?.label,
+          sqft,
+          contractor,
+          municipality: result?.municipality,
+          materialQuality,
+          locationType,
+        }),
+      });
+      if (!res.ok) throw new Error("API error");
+      const data = await res.json();
+      setEstimate(data);
+    } catch {
+      setEstimateError("Something went wrong. Please try again.");
+    } finally {
+      setEstimateLoading(false);
     }
   };
 
@@ -414,6 +451,156 @@ export default function Home() {
 
               <div style={s.disclaimer}>⚠️ This checklist is AI-generated guidance based on typical requirements and should not be treated as legal or regulatory advice. Always verify permit requirements directly with your local building department before starting work.</div>
             </div>
+
+            {/* Cost Estimator Section */}
+            {!estimate && (
+              <div style={{ background: "#F0F5F2", border: "1px solid #C5D9CE", borderRadius: "10px", padding: "28px", marginTop: "20px", marginBottom: "8px" }}>
+                <div style={{ textAlign: "center" as const }}>
+                  <div style={{ fontSize: "32px", marginBottom: "12px" }}>🔨</div>
+                  <div style={{ fontSize: "20px", fontFamily: "Georgia, serif", marginBottom: "8px", color: "#1C3A2F" }}>How much will this project cost?</div>
+                  <div style={{ fontFamily: "sans-serif", fontSize: "14px", color: "#5A7A6A", marginBottom: "20px", lineHeight: "1.5" }}>Answer 2 quick questions for a tighter cost estimate.</div>
+                </div>
+
+                {showEstimateForm && (
+                  <div className="animate-in">
+                    <div style={{ marginBottom: "16px" }}>
+                      <div style={{ fontFamily: "sans-serif", fontSize: "13px", fontWeight: 600, color: "#1C3A2F", marginBottom: "10px" }}>Material quality</div>
+                      <div style={s.radioGroup}>
+                        {["Budget", "Mid-range", "Premium"].map((o) => (
+                          <button key={o} onClick={() => setMaterialQuality(o)} style={{ padding: "9px 18px", border: materialQuality === o ? "2px solid #1C3A2F" : "1.5px solid #C5D9CE", borderRadius: "24px", background: materialQuality === o ? "#1C3A2F" : "#F7F5F0", color: materialQuality === o ? "#E8D5A3" : "#1A1A1A", cursor: "pointer", fontFamily: "sans-serif", fontSize: "13px", fontWeight: materialQuality === o ? 600 : 400 }}>
+                            {o === "Budget" ? "💰 Budget" : o === "Mid-range" ? "⚖️ Mid-range" : "✨ Premium"}
+                          </button>
+                        ))}
+                      </div>
+                      <div style={{ fontFamily: "sans-serif", fontSize: "12px", color: "#6B6B6B", marginTop: "6px" }}>
+                        {materialQuality === "Budget" ? "Basic materials, functional but minimal" : materialQuality === "Mid-range" ? "Good quality materials, most common choice" : materialQuality === "Premium" ? "High-end materials, best durability and aesthetics" : ""}
+                      </div>
+                    </div>
+
+                    <div style={{ marginBottom: "20px" }}>
+                      <div style={{ fontFamily: "sans-serif", fontSize: "13px", fontWeight: 600, color: "#1C3A2F", marginBottom: "10px" }}>Your location type</div>
+                      <div style={s.radioGroup}>
+                        {["Rural", "Suburban", "Urban"].map((o) => (
+                          <button key={o} onClick={() => setLocationType(o)} style={{ padding: "9px 18px", border: locationType === o ? "2px solid #1C3A2F" : "1.5px solid #C5D9CE", borderRadius: "24px", background: locationType === o ? "#1C3A2F" : "#F7F5F0", color: locationType === o ? "#E8D5A3" : "#1A1A1A", cursor: "pointer", fontFamily: "sans-serif", fontSize: "13px", fontWeight: locationType === o ? 600 : 400 }}>
+                            {o === "Rural" ? "🌾 Rural" : o === "Suburban" ? "🏘️ Suburban" : "🏙️ Urban"}
+                          </button>
+                        ))}
+                      </div>
+                      <div style={{ fontFamily: "sans-serif", fontSize: "12px", color: "#6B6B6B", marginTop: "6px" }}>
+                        {locationType === "Rural" ? "Lower labor costs, may need material delivery" : locationType === "Suburban" ? "Average labor costs, most common" : locationType === "Urban" ? "Higher labor costs, limited access surcharges" : ""}
+                      </div>
+                    </div>
+
+                    {estimateError && <div style={{ ...s.warningBox, marginBottom: "16px" }}><span>⚠️</span><span>{estimateError}</span></div>}
+
+                    <button
+                      onClick={handleEstimate}
+                      disabled={estimateLoading || !materialQuality || !locationType}
+                      style={{ background: "#1C3A2F", color: "#E8D5A3", border: "none", padding: "13px 28px", fontSize: "15px", borderRadius: "8px", cursor: !materialQuality || !locationType ? "not-allowed" : "pointer", fontFamily: "sans-serif", fontWeight: 600, opacity: estimateLoading || !materialQuality || !locationType ? 0.5 : 1, width: "100%" }}>
+                      {estimateLoading ? "Calculating…" : "Generate Cost Estimate →"}
+                    </button>
+                  </div>
+                )}
+
+                {!showEstimateForm && (
+                  <div style={{ textAlign: "center" as const }}>
+                    <button onClick={() => setShowEstimateForm(true)} style={{ background: "#1C3A2F", color: "#E8D5A3", border: "none", padding: "13px 28px", fontSize: "15px", borderRadius: "8px", cursor: "pointer", fontFamily: "sans-serif", fontWeight: 600 }}>
+                      Get Cost Estimate →
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Cost Estimate Results */}
+            {estimate && (
+              <div style={{ ...s.card, marginTop: "20px" }} className="animate-in">
+                <div style={{ background: "#1C3A2F", borderRadius: "10px", padding: "20px 24px", marginBottom: "24px", display: "flex", alignItems: "center", gap: "16px" }}>
+                  <div style={{ fontSize: "28px" }}>🔨</div>
+                  <div>
+                    <div style={{ color: "#F7F5F0", fontSize: "18px", fontFamily: "Georgia, serif", marginBottom: "4px" }}>Project Cost Estimate</div>
+                    <div style={{ fontFamily: "sans-serif", fontSize: "13px", color: "#A8C5B5" }}>{estimate.project} · {estimate.size}</div>
+                  </div>
+                </div>
+
+                {/* Total Cost */}
+                <div style={{ marginBottom: "28px" }}>
+                  <div style={s.sectionTitle}>Total project cost</div>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "12px" }}>
+                    <div style={{ background: "#F0F5F2", border: "1px solid #C5D9CE", borderRadius: "8px", padding: "16px", textAlign: "center" as const }}>
+                      <div style={{ fontFamily: "sans-serif", fontSize: "11px", color: "#8B7355", marginBottom: "6px", letterSpacing: "1px", textTransform: "uppercase" as const }}>Low estimate</div>
+                      <div style={{ fontSize: "22px", fontWeight: "bold", color: "#1C3A2F" }}>${estimate.total_low?.toLocaleString()}</div>
+                    </div>
+                    <div style={{ background: "#1C3A2F", border: "1px solid #2D5A45", borderRadius: "8px", padding: "16px", textAlign: "center" as const }}>
+                      <div style={{ fontFamily: "sans-serif", fontSize: "11px", color: "#A8C5B5", marginBottom: "6px", letterSpacing: "1px", textTransform: "uppercase" as const }}>Typical range</div>
+                      <div style={{ fontSize: "22px", fontWeight: "bold", color: "#E8D5A3" }}>${estimate.total_low?.toLocaleString()} – ${estimate.total_high?.toLocaleString()}</div>
+                    </div>
+                    <div style={{ background: "#F0F5F2", border: "1px solid #C5D9CE", borderRadius: "8px", padding: "16px", textAlign: "center" as const }}>
+                      <div style={{ fontFamily: "sans-serif", fontSize: "11px", color: "#8B7355", marginBottom: "6px", letterSpacing: "1px", textTransform: "uppercase" as const }}>High estimate</div>
+                      <div style={{ fontSize: "22px", fontWeight: "bold", color: "#1C3A2F" }}>${estimate.total_high?.toLocaleString()}</div>
+                    </div>
+                  </div>
+                  <div style={{ fontFamily: "sans-serif", fontSize: "12px", color: "#8B7355", marginTop: "10px", textAlign: "center" as const }}>
+                    ~${estimate.cost_per_sqft_low}–${estimate.cost_per_sqft_high} per sq ft · Timeline: {estimate.timeline}
+                  </div>
+                </div>
+
+                {/* Materials Breakdown */}
+                {estimate.materials?.length > 0 && (
+                  <div style={{ marginBottom: "28px" }}>
+                    <div style={s.sectionTitle}>Materials breakdown</div>
+                    {estimate.materials.map((m: any, i: number) => (
+                      <div key={i} style={{ padding: "14px 0", borderBottom: "1px solid #F0EDE6" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "6px" }}>
+                          <div>
+                            <div style={{ fontFamily: "sans-serif", fontSize: "14px", fontWeight: 600, color: "#1A1A1A", marginBottom: "3px" }}>{m.category}</div>
+                            <div style={{ fontFamily: "sans-serif", fontSize: "13px", color: "#6B6B6B" }}>{m.description}</div>
+                          </div>
+                          <div style={{ fontFamily: "sans-serif", fontSize: "14px", fontWeight: 600, color: "#1C3A2F", whiteSpace: "nowrap" as const, marginLeft: "16px" }}>
+                            ${m.cost_low?.toLocaleString()} – ${m.cost_high?.toLocaleString()}
+                          </div>
+                        </div>
+                        <div style={{ display: "flex", gap: "8px", marginTop: "6px" }}>
+                          {m.home_depot_search && (
+                            <a href={`https://www.homedepot.com/s/${encodeURIComponent(m.home_depot_search)}`} target="_blank" rel="noopener noreferrer" style={{ fontFamily: "sans-serif", fontSize: "12px", color: "#F96302", textDecoration: "none", border: "1px solid #F96302", borderRadius: "4px", padding: "3px 8px", fontWeight: 500 }}>
+                              🟠 Shop Home Depot
+                            </a>
+                          )}
+                          {m.lowes_search && (
+                            <a href={`https://www.lowes.com/search?searchTerm=${encodeURIComponent(m.lowes_search)}`} target="_blank" rel="noopener noreferrer" style={{ fontFamily: "sans-serif", fontSize: "12px", color: "#004990", textDecoration: "none", border: "1px solid #004990", borderRadius: "4px", padding: "3px 8px", fontWeight: 500 }}>
+                              🔵 Shop Lowe's
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                    <div style={{ display: "flex", justifyContent: "space-between", padding: "14px 0", borderBottom: "1px solid #F0EDE6" }}>
+                      <div>
+                        <div style={{ fontFamily: "sans-serif", fontSize: "14px", fontWeight: 600, color: "#1A1A1A", marginBottom: "3px" }}>Labor</div>
+                        <div style={{ fontFamily: "sans-serif", fontSize: "13px", color: "#6B6B6B" }}>Installation and contractor fees</div>
+                      </div>
+                      <div style={{ fontFamily: "sans-serif", fontSize: "14px", fontWeight: 600, color: "#1C3A2F", whiteSpace: "nowrap" as const, marginLeft: "16px" }}>
+                        ${estimate.labor_low?.toLocaleString()} – ${estimate.labor_high?.toLocaleString()}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Money saving tips */}
+                {estimate.money_saving_tips?.length > 0 && (
+                  <div style={{ marginBottom: "28px" }}>
+                    <div style={s.sectionTitle}>Ways to save money</div>
+                    {estimate.money_saving_tips.map((tip: string, i: number) => (
+                      <div key={i} style={{ ...s.tipBox, marginBottom: "8px" }}><span>💡</span><span>{tip}</span></div>
+                    ))}
+                  </div>
+                )}
+
+                {estimate.notes && (
+                  <div style={s.disclaimer}>{estimate.notes}</div>
+                )}
+              </div>
+            )}
 
             <div style={s.ctaBox}>
               <div style={s.ctaTitle}>Want us to auto-fill your permit forms?</div>

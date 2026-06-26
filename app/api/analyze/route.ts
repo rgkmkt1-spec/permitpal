@@ -20,7 +20,7 @@ Return this exact JSON structure with SHORT values (keep each string under 100 c
 
     const message = await client.messages.create({
       model: "claude-sonnet-4-6",
-      max_tokens: 1500,
+      max_tokens: 2000,
       messages: [{ role: "user", content: prompt }],
     });
 
