@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PermitPal — Know Your Permits & Project Costs Before You Build</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Georgia', serif; background: #F7F5F0; color: #1A1A1A; }
+
+  .nav { background: #1C3A2F; padding: 0 32px; height: 64px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .nav-mark { background: #E8D5A3; color: #1C3A2F; border-radius: 5px; padding: 3px 8px; font-family: monospace; font-size: 13px; font-weight: bold; }
+  .nav-name { color: #E8D5A3; font-size: 20px; }
+  .nav-cta { background: #E8D5A3; color: #1C3A2F; border: none; padding: 10px 22px; border-radius: 6px; font-family: sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; text-decoration: none; }
+
+  .hero { background: #1C3A2F; padding: 90px 24px 100px; text-align: center; }
+  .hero-eyebrow { font-family: sans-serif; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #A8C5B5; margin-bottom: 24px; }
+  .hero-headline { font-size: clamp(36px, 5.5vw, 68px); font-weight: normal; color: #F7F5F0; line-height: 1.08; max-width: 820px; margin: 0 auto 24px; }
+  .hero-headline em { color: #E8D5A3; font-style: italic; }
+  .hero-sub { font-family: sans-serif; font-size: 18px; color: #A8C5B5; max-width: 580px; margin: 0 auto 48px; line-height: 1.6; }
+  .hero-cta-wrap { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+  .btn-primary { background: #E8D5A3; color: #1C3A2F; border: none; padding: 18px 48px; font-family: sans-serif; font-size: 17px; font-weight: 700; border-radius: 8px; cursor: pointer; text-decoration: none; display: inline-block; letter-spacing: 0.3px; }
+  .hero-guarantee { font-family: sans-serif; font-size: 13px; color: #7A9A8A; }
+  .hero-stats { display: flex; justify-content: center; gap: 60px; flex-wrap: wrap; border-top: 1px solid #2D5A45; padding-top: 48px; margin-top: 60px; }
+  .stat-num { font-size: 36px; color: #E8D5A3; font-weight: bold; }
+  .stat-label { font-family: sans-serif; font-size: 12px; color: #A8C5B5; margin-top: 6px; }
+
+  .value-bar { background: #F0F5F2; border-top: 3px solid #1C3A2F; border-bottom: 3px solid #1C3A2F; padding: 28px 24px; text-align: center; }
+  .value-bar-inner { display: flex; justify-content: center; flex-wrap: wrap; gap: 32px; max-width: 900px; margin: 0 auto; }
+  .value-item { display: flex; align-items: center; gap: 10px; font-family: sans-serif; font-size: 15px; color: #1C3A2F; font-weight: 600; }
+
+  .pain { background: #1A1A1A; padding: 80px 24px; text-align: center; }
+  .pain h2 { font-size: clamp(28px, 4vw, 44px); font-weight: normal; color: #F7F5F0; margin-bottom: 16px; }
+  .pain h2 em { color: #E8D5A3; font-style: italic; }
+  .pain-sub { font-family: sans-serif; font-size: 16px; color: #9A9A9A; max-width: 560px; margin: 0 auto 48px; line-height: 1.6; }
+  .pain-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; max-width: 900px; margin: 0 auto; }
+  .pain-card { background: #242424; border: 1px solid #333; border-radius: 10px; padding: 28px; text-align: left; }
+  .pain-icon { font-size: 28px; margin-bottom: 14px; }
+  .pain-title { font-size: 17px; color: #F7F5F0; margin-bottom: 8px; }
+  .pain-desc { font-family: sans-serif; font-size: 14px; color: #7A7A7A; line-height: 1.5; }
+
+  .how { background: #F7F5F0; padding: 90px 24px; }
+  .section-eyebrow { font-family: sans-serif; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #8B7355; margin-bottom: 16px; text-align: center; }
+  .section-title { font-size: clamp(28px, 4vw, 44px); font-weight: normal; text-align: center; margin-bottom: 12px; }
+  .section-title em { color: #1C3A2F; font-style: italic; }
+  .section-sub { font-family: sans-serif; font-size: 16px; color: #6B6B6B; text-align: center; max-width: 520px; margin: 0 auto 60px; line-height: 1.6; }
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 32px; max-width: 1000px; margin: 0 auto; }
+  .step { text-align: center; }
+  .step-num { width: 48px; height: 48px; background: #1C3A2F; color: #E8D5A3; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: sans-serif; font-size: 18px; font-weight: 700; margin: 0 auto 16px; }
+  .step-icon { font-size: 32px; margin-bottom: 12px; }
+  .step-title { font-size: 18px; margin-bottom: 8px; }
+  .step-desc { font-family: sans-serif; font-size: 14px; color: #6B6B6B; line-height: 1.5; }
+
+  .features { background: #1C3A2F; padding: 90px 24px; }
+  .features .section-eyebrow { color: #A8C5B5; }
+  .features .section-title { color: #F7F5F0; }
+  .features .section-title em { color: #E8D5A3; }
+  .features .section-sub { color: #A8C5B5; }
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 1000px; margin: 0 auto; }
+  .feature-card { background: #243E32; border: 1px solid #2D5A45; border-radius: 10px; padding: 28px; }
+  .feature-card.highlight-card { background: #1A3028; border: 2px solid #E8D5A3; }
+  .feature-icon { font-size: 28px; margin-bottom: 14px; }
+  .feature-title { font-size: 17px; color: #F7F5F0; margin-bottom: 8px; }
+  .feature-desc { font-family: sans-serif; font-size: 14px; color: #8AB5A0; line-height: 1.5; }
+  .feature-card.highlight-card .feature-title { color: #E8D5A3; }
+  .feature-card.highlight-card .feature-desc { color: #A8C5B5; }
+
+  .who { background: #F7F5F0; padding: 90px 24px; }
+  .who-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; max-width: 900px; margin: 0 auto; }
+  .who-card { background: #fff; border: 1px solid #E8E4DC; border-radius: 10px; padding: 28px; }
+  .who-icon { font-size: 32px; margin-bottom: 14px; }
+  .who-title { font-size: 17px; margin-bottom: 8px; color: #1C3A2F; }
+  .who-desc { font-family: sans-serif; font-size: 14px; color: #6B6B6B; line-height: 1.5; }
+
+  .testimonials { background: #F0EDE6; padding: 90px 24px; }
+  .testi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; max-width: 1000px; margin: 0 auto; }
+  .testi-card { background: #fff; border-radius: 10px; padding: 32px; border: 1px solid #E8E4DC; }
+  .testi-stars { color: #E8D5A3; font-size: 18px; margin-bottom: 16px; letter-spacing: 2px; }
+  .testi-quote { font-size: 16px; color: #1A1A1A; line-height: 1.6; margin-bottom: 20px; font-style: italic; }
+  .testi-author { font-family: sans-serif; font-size: 13px; color: #8B7355; font-weight: 600; }
+
+  .warning { background: #FEF9EC; border-top: 4px solid #E8D5A3; padding: 60px 24px; text-align: center; }
+  .warning h2 { font-size: clamp(24px, 3.5vw, 38px); font-weight: normal; margin-bottom: 16px; }
+  .warning p { font-family: sans-serif; font-size: 16px; color: #6B6B6B; max-width: 560px; margin: 0 auto; line-height: 1.6; }
+
+  .pricing { background: #F7F5F0; padding: 90px 24px; }
+  .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; max-width: 1050px; margin: 0 auto 40px; }
+  .price-card { background: #fff; border: 1px solid #E8E4DC; border-radius: 12px; padding: 32px; }
+  .price-card.highlight { background: #1C3A2F; border: 2px solid #E8D5A3; }
+  .price-name { font-family: sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #8B7355; margin-bottom: 8px; }
+  .price-card.highlight .price-name { color: #A8C5B5; }
+  .price-amount { font-size: 38px; font-weight: bold; color: #1C3A2F; margin-bottom: 4px; }
+  .price-card.highlight .price-amount { color: #E8D5A3; }
+  .price-period { font-family: sans-serif; font-size: 13px; color: #6B6B6B; margin-bottom: 20px; }
+  .price-card.highlight .price-period { color: #A8C5B5; }
+  .price-btn { display: block; width: 100%; padding: 13px; background: #1C3A2F; color: #E8D5A3; border: none; border-radius: 8px; font-family: sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; text-align: center; text-decoration: none; margin-bottom: 20px; }
+  .price-card.highlight .price-btn { background: #E8D5A3; color: #1C3A2F; }
+  .price-feature { display: flex; align-items: center; gap: 8px; font-family: sans-serif; font-size: 13px; color: #3A3A3A; margin-bottom: 10px; }
+  .price-card.highlight .price-feature { color: #D4EDE4; }
+  .price-check { color: #1C3A2F; font-weight: bold; }
+  .price-card.highlight .price-check { color: #A8C5B5; }
+  .pricing-note { text-align: center; font-family: sans-serif; font-size: 13px; color: #8B7355; }
+
+  .affiliate { background: #1A1A1A; padding: 80px 24px; text-align: center; }
+  .affiliate h2 { font-size: clamp(28px, 4vw, 42px); font-weight: normal; color: #F7F5F0; margin-bottom: 16px; }
+  .affiliate h2 em { color: #E8D5A3; font-style: italic; }
+  .affiliate p { font-family: sans-serif; font-size: 16px; color: #9A9A9A; max-width: 580px; margin: 0 auto 40px; line-height: 1.6; }
+  .aff-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; max-width: 860px; margin: 0 auto 48px; }
+  .aff-card { background: #242424; border: 1px solid #333; border-radius: 10px; padding: 24px; text-align: center; }
+  .aff-num { font-size: 36px; font-weight: bold; color: #E8D5A3; margin-bottom: 6px; }
+  .aff-label { font-family: sans-serif; font-size: 13px; color: #7A7A7A; }
+  .btn-outline { background: transparent; color: #E8D5A3; border: 2px solid #E8D5A3; padding: 16px 40px; font-family: sans-serif; font-size: 16px; font-weight: 700; border-radius: 8px; cursor: pointer; text-decoration: none; display: inline-block; }
+
+  .guarantee { background: #F7F5F0; padding: 80px 24px; text-align: center; }
+  .guarantee-box { background: #fff; border: 1px solid #E8E4DC; border-radius: 12px; padding: 48px; max-width: 600px; margin: 0 auto; }
+  .guarantee-icon { font-size: 48px; margin-bottom: 20px; }
+  .guarantee h2 { font-size: 28px; font-weight: normal; margin-bottom: 12px; }
+  .guarantee p { font-family: sans-serif; font-size: 15px; color: #6B6B6B; line-height: 1.6; }
+
+  .final-cta { background: #1C3A2F; padding: 100px 24px; text-align: center; }
+  .final-cta h2 { font-size: clamp(32px, 5vw, 58px); font-weight: normal; color: #F7F5F0; margin-bottom: 20px; line-height: 1.1; }
+  .final-cta h2 em { color: #E8D5A3; font-style: italic; }
+  .final-cta p { font-family: sans-serif; font-size: 17px; color: #A8C5B5; max-width: 480px; margin: 0 auto 40px; line-height: 1.6; }
+
+  .footer { background: #111; padding: 40px 24px; text-align: center; }
+  .footer p { font-family: sans-serif; font-size: 13px; color: #555; line-height: 1.8; }
+  .footer a { color: #777; text-decoration: none; }
+
+  @media (max-width: 600px) {
+    .hero-stats { gap: 32px; }
+    .nav { padding: 0 16px; }
+    .value-bar-inner { gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="#" class="nav-logo">
+    <span class="nav-mark">PP</span>
+    <span class="nav-name">PermitPal</span>
+  </a>
+  <a href="https://permitpalapp.com" class="nav-cta">Try It Free →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">Permits · Project Costs · Material Estimates · Inspector Tips</div>
+  <h1 class="hero-headline">Know Your Permits <em>and Exact Project Costs</em> Before You Build.</h1>
+  <p class="hero-sub">Homeowners, contractors, and investors use PermitPal to get a municipality-specific permit checklist AND a full material cost estimate — in under 60 seconds. No guessing. No fines. No budget surprises.</p>
+  <div class="hero-cta-wrap">
+    <a href="https://permitpalapp.com" class="btn-primary">Get Your Free Permit + Cost Report →</a>
+    <span class="hero-guarantee">✓ First report free &nbsp;·&nbsp; Permit checklist + full cost estimate &nbsp;·&nbsp; 60 seconds</span>
+  </div>
+  <div class="hero-stats">
+    <div>
+      <div class="stat-num">$5,000+</div>
+      <div class="stat-label">Average fine for unpermitted work</div>
+    </div>
+    <div>
+      <div class="stat-num">38%</div>
+      <div class="stat-label">US homes with unpermitted additions</div>
+    </div>
+    <div>
+      <div class="stat-num">60 sec</div>
+      <div class="stat-label">Time to get your full report</div>
+    </div>
+    <div>
+      <div class="stat-num">2-in-1</div>
+      <div class="stat-label">Permits + cost estimate in one report</div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUE BAR -->
+<div class="value-bar">
+  <div class="value-bar-inner">
+    <div class="value-item">📋 Permit checklist</div>
+    <div class="value-item">💰 Cost estimates</div>
+    <div class="value-item">🔨 Material breakdown</div>
+    <div class="value-item">🛒 Home Depot & Lowe's links</div>
+    <div class="value-item">🔍 Inspector tips</div>
+    <div class="value-item">⚠️ Common mistake warnings</div>
+  </div>
+</div>
+
+<!-- PAIN -->
+<section class="pain">
+  <h2>Permit mistakes and budget surprises <em>cost people everything.</em></h2>
+  <p class="pain-sub">Most homeowners don't know what permits they need or what their project will actually cost — until it's too late.</p>
+  <div class="pain-grid">
+    <div class="pain-card">
+      <div class="pain-icon">🚨</div>
+      <div class="pain-title">Stop-Work Orders</div>
+      <div class="pain-desc">Inspectors can shut down your entire project mid-build — leaving you with a half-finished renovation and mounting costs with no end in sight.</div>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">💸</div>
+      <div class="pain-title">Massive Fines</div>
+      <div class="pain-desc">Unpermitted work can result in fines of $500 to $10,000+ depending on your municipality. Some cities charge per day the work remains unpermitted.</div>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">📉</div>
+      <div class="pain-title">Blown Budgets</div>
+      <div class="pain-desc">Contractor quotes are just the start. Most homeowners don't know about permit fees, inspection costs, and material prices — until the bills arrive.</div>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">🏠</div>
+      <div class="pain-title">Can't Sell Your Home</div>
+      <div class="pain-desc">Unpermitted additions must be disclosed to buyers — and banks won't lend on homes with unpermitted work. It kills deals at the worst possible moment.</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how">
+  <div class="section-eyebrow">How It Works</div>
+  <h2 class="section-title">Your complete project guide in <em>4 simple steps</em></h2>
+  <p class="section-sub">Permits AND costs — no bureaucracy, no confusing city websites, no contractor calls.</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-icon">📍</div>
+      <div class="step-title">Enter Your ZIP Code</div>
+      <div class="step-desc">We identify your exact municipality and load its specific building codes and permit requirements.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-icon">🔨</div>
+      <div class="step-title">Describe Your Project</div>
+      <div class="step-desc">Pick your project type and tell us the size, scope, and whether you're hiring a contractor.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-icon">🤖</div>
+      <div class="step-title">AI Analyzes Everything</div>
+      <div class="step-desc">Our AI generates your permit checklist AND calculates a detailed material cost estimate using current RSMeans pricing data.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-icon">✅</div>
+      <div class="step-title">Get Your Full Report</div>
+      <div class="step-desc">Receive your permit checklist, cost breakdown by material category, Home Depot & Lowe's shopping links, and inspector tips.</div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT YOU GET -->
+<section class="features">
+  <div class="section-eyebrow">What's Included</div>
+  <h2 class="section-title">Two reports in one — <em>permits and costs</em></h2>
+  <p class="section-sub">Everything you need to plan, budget, and build with confidence.</p>
+  <div class="features-grid">
+    <div class="feature-card highlight-card">
+      <div class="feature-icon">📋</div>
+      <div class="feature-title">Municipality-Specific Permit Checklist</div>
+      <div class="feature-desc">Know exactly which permits you need for your city or county — not generic national advice, but rules specific to where you live and what you're building.</div>
+    </div>
+    <div class="feature-card highlight-card">
+      <div class="feature-icon">🔨</div>
+      <div class="feature-title">Full Project Cost Estimate</div>
+      <div class="feature-desc">Get a detailed material and labor cost breakdown by category — lumber, concrete, electrical, plumbing, and more — based on your size, quality level, and location.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💰</div>
+      <div class="feature-title">Permit Fee Estimates</div>
+      <div class="feature-desc">See estimated permit fees and inspection costs before you apply — so you can budget the full project cost from day one.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🛒</div>
+      <div class="feature-title">Home Depot & Lowe's Links</div>
+      <div class="feature-desc">Every material category links directly to the right products at Home Depot and Lowe's so you can check real prices and order instantly.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔍</div>
+      <div class="feature-title">Inspector Tips</div>
+      <div class="feature-desc">Learn exactly what building inspectors look for on your specific project type — so you pass on the first visit, not the third.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚠️</div>
+      <div class="feature-title">Common Mistake Warnings</div>
+      <div class="feature-desc">We flag the most common permit and budget mistakes for your project type in your region — so you avoid the pitfalls that trip up other homeowners.</div>
+    </div>
+  </div>
+</section>
+
+<!-- WHO IT'S FOR -->
+<section class="who">
+  <div class="section-eyebrow">Who Uses PermitPal</div>
+  <h2 class="section-title">Built for anyone <em>who builds</em></h2>
+  <p class="section-sub">From first-time DIYers to seasoned contractors and investors.</p>
+  <div class="who-grid">
+    <div class="who-card">
+      <div class="who-icon">🏠</div>
+      <div class="who-title">Homeowners</div>
+      <div class="who-desc">Planning a deck, finishing a basement, or adding a bathroom? Know your permits AND your exact material costs before you spend a dollar.</div>
+    </div>
+    <div class="who-card">
+      <div class="who-icon">🔧</div>
+      <div class="who-title">Contractors & Builders</div>
+      <div class="who-desc">Run permit checks and cost estimates for every client project in seconds. The Pro plan pays for itself on the very first job.</div>
+    </div>
+    <div class="who-card">
+      <div class="who-icon">🏘️</div>
+      <div class="who-title">Real Estate Investors</div>
+      <div class="who-desc">Before you close on a fix-and-flip, know exactly what permits the rehab needs, what it'll cost to get them, and the full material budget.</div>
+    </div>
+    <div class="who-card">
+      <div class="who-icon">🏢</div>
+      <div class="who-title">Property Managers</div>
+      <div class="who-desc">Managing renovations across multiple properties? Run permit and cost checks for every project without calling a single city office or contractor.</div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div class="section-eyebrow">What People Are Saying</div>
+  <h2 class="section-title">Real results from <em>real projects</em></h2>
+  <p class="section-sub">PermitPal users avoid costly mistakes and budget surprises every day.</p>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-quote">"I was about to start my deck without permits AND had no idea what materials would cost. PermitPal gave me both in under a minute. The cost estimate alone saved me from massively underbudgeting."</p>
+      <div class="testi-author">— Mike T., Homeowner, Austin TX</div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-quote">"As a contractor I used to spend hours figuring out permits and building material cost estimates for clients. PermitPal does both in 60 seconds. The Pro plan is a no-brainer."</p>
+      <div class="testi-author">— Sarah K., General Contractor, Denver CO</div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <p class="testi-quote">"I use PermitPal before every fix-and-flip offer I make. Knowing the permits AND the full material cost breakdown helps me make better offers and avoid nasty surprises after closing."</p>
+      <div class="testi-author">— James R., Real Estate Investor, Phoenix AZ</div>
+    </div>
+  </div>
+</section>
+
+<!-- WARNING -->
+<section class="warning">
+  <h2>⚠️ Don't start without your permits and budget</h2>
+  <p>Every day people start renovations without the right permits AND without knowing what the project will actually cost. PermitPal solves both problems in one report — for less than a single hour with a contractor. Your first report is completely free.</p>
+</section>
+
+<!-- PRICING -->
+<section class="pricing">
+  <div class="section-eyebrow">Simple Pricing</div>
+  <h2 class="section-title">Start free. <em>Upgrade anytime.</em></h2>
+  <p class="section-sub">Your first permit + cost report is always free. No credit card required.</p>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-name">One-Time</div>
+      <div class="price-amount">$9.99</div>
+      <div class="price-period">one-time payment</div>
+      <a href="https://permitpalapp.com/pricing" class="price-btn">Buy Report</a>
+      <div class="price-feature"><span class="price-check">✓</span> 1 full permit report</div>
+      <div class="price-feature"><span class="price-check">✓</span> Full cost estimate</div>
+      <div class="price-feature"><span class="price-check">✓</span> Material breakdown</div>
+      <div class="price-feature"><span class="price-check">✓</span> Inspector tips</div>
+    </div>
+    <div class="price-card">
+      <div class="price-name">Starter</div>
+      <div class="price-amount">$14.99</div>
+      <div class="price-period">per month · or $149/year</div>
+      <a href="https://permitpalapp.com/pricing" class="price-btn">Start Starter</a>
+      <div class="price-feature"><span class="price-check">✓</span> 5 reports per month</div>
+      <div class="price-feature"><span class="price-check">✓</span> Permit checklists</div>
+      <div class="price-feature"><span class="price-check">✓</span> Cost estimates</div>
+      <div class="price-feature"><span class="price-check">✓</span> Email support</div>
+    </div>
+    <div class="price-card highlight">
+      <div class="price-name">Pro — Most Popular</div>
+      <div class="price-amount">$19.99</div>
+      <div class="price-period">per month · or $199/year</div>
+      <a href="https://permitpalapp.com/pricing" class="price-btn">Start Pro</a>
+      <div class="price-feature"><span class="price-check">✓</span> 15 reports per month</div>
+      <div class="price-feature"><span class="price-check">✓</span> Full cost estimates</div>
+      <div class="price-feature"><span class="price-check">✓</span> Material breakdowns</div>
+      <div class="price-feature"><span class="price-check">✓</span> Home Depot & Lowe's links</div>
+    </div>
+    <div class="price-card">
+      <div class="price-name">Unlimited</div>
+      <div class="price-amount">$49.99</div>
+      <div class="price-period">per month · or $499/year</div>
+      <a href="https://permitpalapp.com/pricing" class="price-btn">Go Unlimited</a>
+      <div class="price-feature"><span class="price-check">✓</span> Unlimited reports</div>
+      <div class="price-feature"><span class="price-check">✓</span> Everything in Pro</div>
+      <div class="price-feature"><span class="price-check">✓</span> Priority support</div>
+      <div class="price-feature"><span class="price-check">✓</span> Best for contractors</div>
+    </div>
+  </div>
+  <p class="pricing-note">All plans include a free first report. Cancel anytime. Yearly plans save 17%.</p>
+</section>
+
+<!-- AFFILIATE -->
+<section class="affiliate">
+  <h2>Earn 50% promoting <em>PermitPal</em></h2>
+  <p>Join our affiliate program and earn 50% commission on every sale you refer. With plans ranging from $9.99 to $49.99/month — and recurring subscriptions — the commissions add up fast.</p>
+  <div class="aff-grid">
+    <div class="aff-card">
+      <div class="aff-num">50%</div>
+      <div class="aff-label">Commission on every sale</div>
+    </div>
+    <div class="aff-card">
+      <div class="aff-num">$25+</div>
+      <div class="aff-label">Avg commission per referral</div>
+    </div>
+    <div class="aff-card">
+      <div class="aff-num">∞</div>
+      <div class="aff-label">No cap on earnings</div>
+    </div>
+    <div class="aff-card">
+      <div class="aff-num">60 day</div>
+      <div class="aff-label">Cookie window</div>
+    </div>
+  </div>
+  <a href="https://permitpalapp.com" class="btn-outline">Join the Affiliate Program →</a>
+</section>
+
+<!-- GUARANTEE -->
+<section class="guarantee">
+  <div class="guarantee-box">
+    <div class="guarantee-icon">🛡️</div>
+    <h2>30-Day Money Back Guarantee</h2>
+    <p>Not happy with PermitPal? We'll refund your purchase within 30 days, no questions asked. We're confident the permit checklist and cost estimate will save you far more than the cost of the report — but if not, you pay nothing.</p>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+  <h2>Know your permits.<br><em>Know your costs.</em><br>Build with confidence.</h2>
+  <p>Get your municipality-specific permit checklist AND full material cost estimate — free for your first project. No credit card. Results in 60 seconds.</p>
+  <a href="https://permitpalapp.com" class="btn-primary">Get Your Free Report Now →</a>
+  <p style="margin-top: 20px; font-family: sans-serif; font-size: 13px; color: #7A9A8A;">✓ Permit checklist + cost estimate &nbsp;·&nbsp; Free first report &nbsp;·&nbsp; No credit card</p>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <p>
+    © 2025 PermitPal · <a href="https://permitpalapp.com">permitpalapp.com</a><br>
+    <a href="#">Privacy Policy</a> · <a href="#">Terms of Service</a> · <a href="mailto:support@permitpalapp.com">support@permitpalapp.com</a><br><br>
+    PermitPal provides AI-generated permit guidance and cost estimates for informational purposes only. Always verify permit requirements with your local building department before starting work.
+  </p>
+</footer>
+
+</body>
+</html>
