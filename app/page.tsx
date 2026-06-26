@@ -245,6 +245,9 @@ export default function Home() {
             <button onClick={handleCheckout} disabled={paywallLoading} style={{ background: "#1C3A2F", color: "#E8D5A3", border: "none", padding: "15px 32px", fontSize: "15px", borderRadius: "8px", cursor: "pointer", fontFamily: "sans-serif", fontWeight: 600, width: "100%", marginBottom: "12px" }}>
               {paywallLoading ? "Loading…" : "Unlock Full Access →"}
             </button>
+            <a href="/pricing" style={{ display: "block", textAlign: "center" as const, fontFamily: "sans-serif", fontSize: "15px", color: "#fff", marginBottom: "12px", fontWeight: 700, textDecoration: "none", background: "#2D5A45", padding: "13px 24px", borderRadius: "8px", border: "1px solid #4A8A6A" }}>
+              📋 See all plans — from $5.99/mo →
+            </a>
             <button onClick={() => setShowPaywall(false)} style={{ background: "transparent", color: "#6B6B6B", border: "1.5px solid #D4CFC5", padding: "13px 24px", fontSize: "14px", borderRadius: "8px", cursor: "pointer", fontFamily: "sans-serif", width: "100%" }}>
               Maybe later
             </button>

@@ -13,14 +13,7 @@ export async function POST(req: NextRequest) {
       customer_email: email || undefined,
       line_items: [
         {
-          price_data: {
-            currency: "usd",
-            product_data: {
-              name: "PermitPal Report",
-              description: "Full permit checklist, cost estimates, and inspector tips for your project",
-            },
-            unit_amount: 499,
-          },
+          price: "price_1TmRRCBcTTBtX5KTxHnTBMik",
           quantity: 1,
         },
       ],

@@ -53,7 +53,19 @@ export default function Pricing() {
 
   const handleSubscribe = async (priceId: string) => {
     if (priceId === "one_time") {
-      window.location.href = "/";
+      setLoading("one_time");
+      try {
+        const res = await fetch("/api/checkout", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: "" }),
+        });
+        const data = await res.json();
+        if (data.url) window.location.href = data.url;
+      } catch {
+        alert("Something went wrong. Please try again.");
+      }
+      setLoading(null);
       return;
     }
     setLoading(priceId);
