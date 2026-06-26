@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
       customer_email: email || undefined,
       line_items: [
         {
-          price: "price_1TmRRCBcTTBtX5KTxHnTBMik",
+          price: "price_1Tmh4dBcTTBtX5KTkAbn4efU",
           quantity: 1,
         },
       ],
