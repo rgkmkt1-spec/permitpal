@@ -20,7 +20,7 @@ const PLANS = [
     yearlyTotal: 39,
     features: ["3 reports per month", "Permit checklists", "Inspector tips", "Email support"],
     cta: "Start Starter",
-    priceId: { monthly: "price_1TmPFqESTHOe99IFR9J752c1", yearly: "price_1TmPUlESTHOe99IFWC0EhKHU" },
+    priceId: { monthly: "price_1TmQvkBcTTBtX5KTbOnC6w93", yearly: "price_1TmQvkBcTTBtX5KTVoge83wN" },
     highlight: false,
   },
   {
@@ -31,7 +31,7 @@ const PLANS = [
     yearlyTotal: 79,
     features: ["10 reports per month", "Permit checklists", "Full cost estimates", "Material breakdowns", "Home Depot & Lowe's links"],
     cta: "Start Pro",
-    priceId: { monthly: "price_1TmPI6ESTHOe99IFK5B87MWc", yearly: "price_1TmPNIESTHOe99IFXRykFhGQ" },
+    priceId: { monthly: "price_1TmQxDBcTTBtX5KT9mpWKngL", yearly: "price_1TmQxvBcTTBtX5KT6Tt95Kod" },
     highlight: true,
   },
   {
@@ -42,7 +42,7 @@ const PLANS = [
     yearlyTotal: 99,
     features: ["Unlimited reports", "Permit checklists", "Full cost estimates", "Material breakdowns", "Home Depot & Lowe's links", "Priority support"],
     cta: "Go Unlimited",
-    priceId: { monthly: "price_1TmPKKESTHOe99IFDL2KQOoI", yearly: "price_1TmPM9ESTHOe99IFgOxMD37Y" },
+    priceId: { monthly: "price_1TmQzBBcTTBtX5KTluaNoFWr", yearly: "price_1TmQzhBcTTBtX5KTLsg4cJ7J" },
     highlight: false,
   },
 ];
