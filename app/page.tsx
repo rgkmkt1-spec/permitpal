@@ -241,7 +241,7 @@ export default function Home() {
             <div style={{ fontSize: "40px", marginBottom: "16px" }}>🏛️</div>
             <h2 style={{ fontSize: "24px", fontWeight: "normal", fontFamily: "Georgia, serif", marginBottom: "12px" }}>Your free report has been used</h2>
             <p style={{ fontFamily: "sans-serif", fontSize: "14px", color: "#6B6B6B", lineHeight: "1.6", marginBottom: "8px" }}>Get unlimited permit checklists, cost estimates, and inspector tips for any project.</p>
-            <p style={{ fontFamily: "sans-serif", fontSize: "28px", fontWeight: "bold", color: "#1C3A2F", marginBottom: "24px" }}>$9.99 one-time</p>
+            <p style={{ fontFamily: "sans-serif", fontSize: "28px", fontWeight: "bold", color: "#1C3A2F", marginBottom: "24px" }}>$4.99 one-time</p>
             <button onClick={handleCheckout} disabled={paywallLoading} style={{ background: "#1C3A2F", color: "#E8D5A3", border: "none", padding: "15px 32px", fontSize: "15px", borderRadius: "8px", cursor: "pointer", fontFamily: "sans-serif", fontWeight: 600, width: "100%", marginBottom: "12px" }}>
               {paywallLoading ? "Loading…" : "Unlock Full Access →"}
             </button>
@@ -257,7 +257,7 @@ export default function Home() {
           <span style={s.logoMark}>PP</span>
           <span style={s.logoText}>PermitPal</span>
         </div>
-        <span style={s.navBadge}>Free Beta</span>
+        <a href="/pricing" style={{ background: "#2D5A45", color: "#A8C5B5", fontSize: "12px", padding: "4px 12px", borderRadius: "20px", fontFamily: "sans-serif", textDecoration: "none" }}>View Plans</a>
       </nav>
 
       {step === 0 && (

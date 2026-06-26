@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
               name: "PermitPal Report",
               description: "Full permit checklist, cost estimates, and inspector tips for your project",
             },
-            unit_amount: 999,
+            unit_amount: 499,
           },
           quantity: 1,
         },
