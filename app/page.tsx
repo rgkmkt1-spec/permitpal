@@ -504,7 +504,12 @@ export default function Home() {
 
                 {!showEstimateForm && (
                   <div style={{ textAlign: "center" as const }}>
-                    {estimateLoading && <div className="spinner" style={{ margin: "0 auto 16px" }} />}
+                    {estimateLoading && (
+                      <>
+                        <div className="spinner" style={{ margin: "0 auto 16px" }} />
+                        <div style={{ fontFamily: "sans-serif", fontSize: "13px", color: "#5A7A6A", marginBottom: "12px" }}>This may take up to a minute — we're calculating material costs for your specific project.</div>
+                      </>
+                    )}
                     <button onClick={() => setShowEstimateForm(true)} disabled={estimateLoading} style={{ background: "#1C3A2F", color: "#E8D5A3", border: "none", padding: "13px 28px", fontSize: "15px", borderRadius: "8px", cursor: estimateLoading ? "not-allowed" : "pointer", fontFamily: "sans-serif", fontWeight: 600, opacity: estimateLoading ? 0.7 : 1 }}>
                       {estimateLoading ? "Calculating your estimate…" : "Get Cost Estimate →"}
                     </button>
