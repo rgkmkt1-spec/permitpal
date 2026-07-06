@@ -601,8 +601,8 @@ export default function Home() {
             )}
 
             <div style={s.ctaBox}>
-              <div style={s.ctaTitle}>Want us to auto-fill your permit forms?</div>
-              <div style={s.ctaSub}>We're building auto-completed permit applications for 500+ municipalities. Join the waitlist for early access.</div>
+              <div style={s.ctaTitle}>Get your permit paperwork done faster</div>
+              <div style={s.ctaSub}>We're building a tool that generates a pre-filled permit summary, links directly to your city's permit office, and tells you exactly which form to download. Join the waitlist for early access.</div>
               {waitlistDone ? (
                 <div style={{ color: "#E8D5A3", fontFamily: "sans-serif", fontSize: "16px", padding: "12px 0" }}>✅ You're on the list — we'll be in touch!</div>
               ) : (
