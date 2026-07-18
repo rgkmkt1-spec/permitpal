@@ -16,7 +16,7 @@ Contractor: ${contractor || "unspecified"}, Timeline: ${timeline || "unspecified
 
 Return this exact JSON structure with SHORT values (keep each string under 100 characters):
 
-{"municipality":"City, State","summary":"One sentence summary.","permits_required":[{"name":"Permit name","icon":"emoji","description":"Short description under 80 chars.","typical_cost":"$X-$Y","typical_timeline":"X-Y weeks","who_files":"Homeowner or Contractor"}],"permits_not_required":[{"name":"Item","reason":"Short reason."}],"checklist":["Step 1","Step 2","Step 3","Step 4","Step 5"],"warnings":["Warning 1","Warning 2"],"cost_estimate":{"permit_fees_low":100,"permit_fees_high":500,"inspection_fees_low":75,"inspection_fees_high":250,"notes":"Short note."},"inspector_tips":["Tip 1","Tip 2"]}`;
+{"municipality":"City, State","summary":"One sentence summary.","permits_required":[{"name":"Permit name","icon":"emoji","description":"Short description under 80 chars.","typical_cost":"$X-$Y","typical_timeline":"X-Y weeks","who_files":"Homeowner or Contractor"}],"permits_not_required":[{"name":"Item","reason":"Short reason."}],"checklist":["Step 1","Step 2","Step 3","Step 4","Step 5"],"warnings":["Warning 1","Warning 2"],"cost_estimate":{"permit_fees_low":100,"permit_fees_high":500,"inspection_fees_low":75,"inspection_fees_high":250,"notes":"Short note."},"inspector_tips":["Tip 1","Tip 2"],"permit_office_url":"https://city building department website","permit_form_url":"https://direct link to permit form or empty string"}`;
 
     const message = await client.messages.create({
       model: "claude-sonnet-4-6",

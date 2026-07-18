@@ -32,6 +32,8 @@ type Result = {
   warnings: string[];
   cost_estimate: { permit_fees_low: number; permit_fees_high: number; inspection_fees_low: number; inspection_fees_high: number; notes: string };
   inspector_tips: string[];
+  permit_office_url?: string;
+  permit_form_url?: string;
 };
 
 export default function Home() {
@@ -160,7 +162,19 @@ export default function Home() {
     await fetch("/api/waitlist", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: waitlistEmail, zip, projectType }),
+      body: JSON.stringify({ 
+        email: waitlistEmail, 
+        zip, 
+        city,
+        projectType,
+        projectLabel: selectedType?.label,
+        municipality: result?.municipality,
+        permits: result?.permits_required,
+        checklist: result?.checklist,
+        warnings: result?.warnings,
+        permit_office_url: result?.permit_office_url,
+        permit_form_url: result?.permit_form_url,
+      }),
     });
     setWaitlistLoading(false);
     setWaitlistDone(true);
@@ -601,14 +615,14 @@ export default function Home() {
             )}
 
             <div style={s.ctaBox}>
-              <div style={s.ctaTitle}>Get your permit paperwork done faster</div>
-              <div style={s.ctaSub}>We're building a tool that generates a pre-filled permit summary, links directly to your city's permit office, and tells you exactly which form to download. Join the waitlist for early access.</div>
+              <div style={s.ctaTitle}>Get your full permit summary by email</div>
+              <div style={s.ctaSub}>Enter your email and we'll send you your complete permit checklist, direct link to your city's permit office, and the exact form you need to download.</div>
               {waitlistDone ? (
-                <div style={{ color: "#E8D5A3", fontFamily: "sans-serif", fontSize: "16px", padding: "12px 0" }}>✅ You're on the list — we'll be in touch!</div>
+                <div style={{ color: "#E8D5A3", fontFamily: "sans-serif", fontSize: "16px", padding: "12px 0" }}>✅ Check your inbox — your permit summary is on its way!</div>
               ) : (
                 <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap" as const, gap: "8px" }}>
                   <input style={s.ctaInput} type="email" placeholder="your@email.com" value={waitlistEmail} onChange={(e) => setWaitlistEmail(e.target.value)} />
-                  <button style={{ ...s.ctaBtn, opacity: waitlistLoading ? 0.7 : 1 }} onClick={handleWaitlist} disabled={waitlistLoading}>{waitlistLoading ? "Joining…" : "Join Waitlist →"}</button>
+                  <button style={{ ...s.ctaBtn, opacity: waitlistLoading ? 0.7 : 1 }} onClick={handleWaitlist} disabled={waitlistLoading}>{waitlistLoading ? "Sending…" : "Email My Summary →"}</button>
                 </div>
               )}
               <div style={{ marginTop: "16px" }}>

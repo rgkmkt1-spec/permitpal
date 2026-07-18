@@ -6,20 +6,66 @@
 <title>Thank You — PermitPal</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Georgia', serif; background: #F7F5F0; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
-  .card { background: #fff; border-radius: 12px; padding: 48px; max-width: 480px; width: 100%; text-align: center; box-shadow: 0 2px 16px rgba(0,0,0,0.07); border: 1px solid #E8E4DC; }
-  .icon { font-size: 56px; margin-bottom: 20px; }
-  h1 { font-size: 28px; font-weight: normal; margin-bottom: 12px; color: #1A1A1A; }
-  p { font-family: sans-serif; font-size: 15px; color: #6B6B6B; line-height: 1.6; margin-bottom: 32px; }
-  a { background: #1C3A2F; color: #E8D5A3; padding: 14px 32px; border-radius: 8px; font-family: sans-serif; font-size: 15px; font-weight: 700; text-decoration: none; display: inline-block; }
+  body { font-family: 'Georgia', serif; background: #F7F5F0; min-height: 100vh; padding: 24px; }
+  .wrap { max-width: 600px; margin: 0 auto; }
+  .card { background: #fff; border-radius: 12px; padding: 40px; box-shadow: 0 2px 16px rgba(0,0,0,0.07); border: 1px solid #E8E4DC; margin-bottom: 20px; }
+  .nav { background: #1C3A2F; padding: 16px 24px; border-radius: 8px; display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+  .logo-mark { background: #E8D5A3; color: #1C3A2F; border-radius: 4px; padding: 2px 8px; font-family: monospace; font-size: 12px; font-weight: bold; }
+  .logo-text { color: #E8D5A3; font-size: 18px; }
+  .billing { background: #F0F5F2; border: 1px solid #C5D9CE; border-radius: 8px; padding: 16px; margin-bottom: 20px; font-family: sans-serif; font-size: 14px; color: #1C3A2F; }
+  .icon { font-size: 48px; margin-bottom: 16px; text-align: center; }
+  h1 { font-size: 26px; font-weight: normal; margin-bottom: 12px; color: #1A1A1A; text-align: center; }
+  .steps { margin: 20px 0; }
+  .step { display: flex; gap: 14px; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid #F0EDE6; }
+  .step-num { background: #1C3A2F; color: #E8D5A3; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-family: sans-serif; font-size: 13px; font-weight: bold; flex-shrink: 0; }
+  .step-text { font-family: sans-serif; font-size: 14px; color: #3A3A3A; line-height: 1.5; padding-top: 4px; }
+  .btn { display: block; background: #1C3A2F; color: #E8D5A3; padding: 14px 32px; border-radius: 8px; font-family: sans-serif; font-size: 15px; font-weight: 700; text-decoration: none; text-align: center; margin: 20px 0; }
+  .contact { font-family: sans-serif; font-size: 14px; color: #6B6B6B; text-align: center; margin-top: 16px; }
+  .contact a { color: #1C3A2F; }
+  .disclaimer { font-family: sans-serif; font-size: 11px; color: #A8A8A8; line-height: 1.6; padding: 16px; background: #F7F5F0; border-radius: 8px; margin-top: 20px; }
 </style>
 </head>
 <body>
-  <div class="card">
-    <div class="icon">🎉</div>
-    <h1>Payment confirmed!</h1>
-    <p>Thank you for purchasing PermitPal. You now have full access to permit checklists, project cost estimates, and inspector tips for your renovation projects.</p>
-    <a href="https://permitpalapp.com">Generate Your Permit Report →</a>
+  <div class="wrap">
+    <div class="nav">
+      <span class="logo-mark">PP</span>
+      <span class="logo-text">PermitPal</span>
+    </div>
+
+    <div class="billing">
+      ℹ️ Your credit card statement will show a charge from <strong>CLKBANK*PERMITPAL STR</strong>
+    </div>
+
+    <div class="card">
+      <div class="icon">🎉</div>
+      <h1>Thank you for your purchase!</h1>
+      <p style="font-family: sans-serif; font-size: 14px; color: #6B6B6B; text-align: center; margin-bottom: 20px;">You now have full access to PermitPal. Here's how to get started:</p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-text">Click the button below to go to PermitPal and start generating permit reports immediately — no login or download required.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-text">Enter your ZIP code and describe your renovation project to get your municipality-specific permit checklist.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-text">After your report generates, enter your email to receive a full permit summary with links to your local permit office and application forms.</div>
+        </div>
+      </div>
+
+      <a href="https://permitpalapp.com" class="btn">Go to PermitPal →</a>
+
+      <div class="contact">
+        Questions? Email us at <a href="mailto:support@permitpalapp.com">support@permitpalapp.com</a>
+      </div>
+    </div>
+
+    <div class="disclaimer">
+      ClickBank is the retailer of this product. CLICKBANK® is a registered trademark of Click Sales, Inc., a Delaware corporation located at 1444 S. Entertainment Ave., Suite 410 Boise, ID 83709, USA and used by permission. ClickBank's role as retailer does not constitute an endorsement, approval or review of this product or any claim, statement or opinion used in promotion of this product.
+    </div>
   </div>
 </body>
 </html>
